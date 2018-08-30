@@ -1,5 +1,7 @@
 import pandas
 import math
+import plotly as py
+import plotly.graph_objs as go
 
 # import and parse file
 def parse_file(fileName):
@@ -33,3 +35,18 @@ def divide_and_round(num):
 
 def scale_down_movies(movies):
     return list(map(lambda el: scale_down_movie(el) ,movies))
+
+#set movie list to scaled down
+scaled_movies = scale_down_movies(parsed_movies)
+budgets = list(map(lambda movie: movie['budget_2013$'], scaled_movies))
+domestic_revenues = list(map(lambda movie: movie['domgross_2013$'], scaled_movies))
+titles = list(map(lambda movie: movie['title'], scaled_movies))
+
+
+
+
+trace1 = go.Scatter(x=budgets, y=domestic_revenues, text = titles, mode="markers")
+data=go.Data([trace1])
+layout=go.Layout(title="Movies!", xaxis={'title':'Budget'}, yaxis={'title':'Revenue'})
+figure=go.Figure(data=data, layout=layout)
+py.offline.plot(figure, filename='file.html')
